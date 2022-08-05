@@ -7,6 +7,7 @@
     <title>Document</title>
     <link rel="stylesheet" href="style/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="style/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,900&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="container">
@@ -34,14 +35,31 @@
           <div class="d-flex justify-content-center">
             <small class="form-label">Already have a account? <a href="login.html">Sign in</a></small>
           </div>
+
+          <div class="container"><br>
+            <div class=" d-flex justify-content-around">
+                <button type="submit" id="sub_google"><ion-icon name="logo-google"></ion-icon></button>
+    
+                <button type="submit" id="sub_facebook"><ion-icon name="logo-facebook"></ion-icon></ion-icon></button>
+    
+                <button type="submit" id="sub_github"><ion-icon name="logo-github"></ion-icon></button>
+            </div>
+        </div>
     </div>
 
+    <br>
+    
 
 
 
 
 
 
+
+
+    <!-- logo script -->
+    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
 
 
     <!-- bootstrap -->
@@ -53,7 +71,7 @@
     <script type="module">
         // Import the functions you need from the SDKs you need
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.9.1/firebase-app.js";
-        import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.9.1/firebase-auth.js";
+        import { getAuth, createUserWithEmailAndPassword, GoogleAuthProvider, signInWithRedirect, getRedirectResult, signInWithPopup, FacebookAuthProvider, GithubAuthProvider } from "https://www.gstatic.com/firebasejs/9.9.1/firebase-auth.js";
         import { getDatabase, set, ref } from "https://www.gstatic.com/firebasejs/9.9.1/firebase-database.js";
 
 
@@ -62,19 +80,22 @@
       
         // Your web app's Firebase configuration
         const firebaseConfig = {
-          apiKey: "AIzaSyDOM1boMigBcIJCP86VE4Hd-i6xoJBCU3k",
-          authDomain: "test-59d32.firebaseapp.com",
-          databaseURL: "https://test-59d32-default-rtdb.firebaseio.com",
-          projectId: "test-59d32",
-          storageBucket: "test-59d32.appspot.com",
-          messagingSenderId: "435069596308",
-          appId: "1:435069596308:web:fad9992bf18f5142603a81"
+          apiKey: "AIzaSyBDevYMI5MwAhi_ZZcPr7Sx-5OHoyiHw5o",
+          authDomain: "authentication-d7579.firebaseapp.com",
+          databaseURL: "https://authentication-d7579-default-rtdb.firebaseio.com",
+          projectId: "authentication-d7579",
+          storageBucket: "authentication-d7579.appspot.com",
+          messagingSenderId: "354724981494",
+          appId: "1:354724981494:web:51aa9d0bbfdf8a857edad7"
         };
       
         // Initialize Firebase
         const app = initializeApp(firebaseConfig);
         const auth = getAuth();
         const database = getDatabase(app);
+        const provider = new GoogleAuthProvider(app);
+        const facebookProvider  = new FacebookAuthProvider(app);
+        const githubProvider = new GithubAuthProvider();
 
 
 
@@ -113,6 +134,149 @@
                     // ..
                 });
         });
+
+
+        sub_google.addEventListener('click', (e) => {
+
+        // redirected method
+
+        // signInWithRedirect(auth, provider);
+
+
+        // getRedirectResult(auth)
+        // .then((result) => {
+        //     // This gives you a Google Access Token. You can use it to access Google APIs.
+        //     const credential = GoogleAuthProvider.credentialFromResult(result);
+        //     const token = credential.accessToken;
+
+        //     // The signed-in user info.
+        //     const user = result.user;
+
+        //     alert(user.displayName);
+
+        // }).catch((error) => {
+        //     // Handle Errors here.
+        //     const errorCode = error.code;
+        //     const errorMessage = error.message;
+        //     // The email of the user's account used.
+        //     const email = error.customData.email;
+        //     // The AuthCredential type that was used.
+        //     const credential = GoogleAuthProvider.credentialFromError(error);
+        //     // ...
+        // });
+
+
+        // popup method
+        signInWithPopup(auth, provider)
+        .then((result) => {
+            // This gives you a Google Access Token. You can use it to access the Google API.
+            const credential = GoogleAuthProvider.credentialFromResult(result);
+            const token = credential.accessToken;
+            // The signed-in user info.
+            const user = result.user;
+            // ...
+            set(ref(database, 'users/' + user.uid), {
+                        email: user.email,
+                        name: user.displayName
+            })
+                .then(() => {
+                   // Data saved successfully!
+                        
+                  alert(user.displayName);
+                   })
+                        .catch((error) => {
+                // The write failed...
+                        alert(error);
+             });
+        }).catch((error) => {
+            // Handle Errors here.
+            const errorCode = error.code;
+            const errorMessage = error.message;
+            // The email of the user's account used.
+            const email = error.customData.email;
+            // The AuthCredential type that was used.
+            const credential = GoogleAuthProvider.credentialFromError(error);
+            // ...
+            alert(errorMessage);
+        });
+        })
+
+        sub_facebook.addEventListener('click', (e) => {
+        signInWithPopup(auth, facebookProvider)
+        .then((result) => {
+            // The signed-in user info.
+            const user = result.user;
+
+            // This gives you a Facebook Access Token. You can use it to access the Facebook API.
+            const credential = FacebookAuthProvider.credentialFromResult(result);
+            const accessToken = credential.accessToken;
+
+            // ...
+            set(ref(database, 'users/' + user.uid), {
+                        email: user.email,
+                        name: user.displayName
+            })
+                .then(() => {
+                   // Data saved successfully!
+                        
+                  alert(user.displayName);
+                   })
+                        .catch((error) => {
+                // The write failed...
+                        alert(error);
+             });
+        })
+        .catch((error) => {
+            // Handle Errors here.
+            const errorCode = error.code;
+            const errorMessage = error.message;
+            // The email of the user's account used.
+            const email = error.customData.email;
+            // The AuthCredential type that was used.
+            const credential = FacebookAuthProvider.credentialFromError(error);
+
+            // ...
+            alert(errorMessage);
+        });
+        })
+
+
+        sub_github.addEventListener('click', (e) => {
+        signInWithPopup(auth, githubProvider)
+        .then((result) => {
+            // This gives you a GitHub Access Token. You can use it to access the GitHub API.
+            const credential = GithubAuthProvider.credentialFromResult(result);
+            const token = credential.accessToken;
+
+            // The signed-in user info.
+            const user = result.user;
+            // ...
+            set(ref(database, 'users/' + user.uid), {
+                        email: user.email,
+                        name: user.displayName
+            })
+                .then(() => {
+                   // Data saved successfully!
+                        
+                  alert(user.displayName);
+                   })
+                        .catch((error) => {
+                // The write failed...
+                        alert(error);
+             });
+        }).catch((error) => {
+            // Handle Errors here.
+            const errorCode = error.code;
+            const errorMessage = error.message;
+            // The email of the user's account used.
+            const email = error.customData.email;
+            // The AuthCredential type that was used.
+            const credential = GithubAuthProvider.credentialFromError(error);
+            // ...
+            alert(error);
+        });
+
+        })
       </script>
 
 </body>
