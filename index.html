@@ -98,8 +98,6 @@
         const githubProvider = new GithubAuthProvider();
 
 
-
-
         // Event listener
         submit.addEventListener('click', (e) => {
 
@@ -119,7 +117,7 @@
                     })
                         .then(() => {
                         // Data saved successfully!
-                        alert('user added successfully!');
+                        alert('Thank you ');
                         })
                         .catch((error) => {
                         // The write failed...
@@ -134,7 +132,6 @@
                     // ..
                 });
         });
-
 
         sub_google.addEventListener('click', (e) => {
 
@@ -182,7 +179,7 @@
                 .then(() => {
                    // Data saved successfully!
                         
-                  alert(user.displayName);
+                  alert('Thank you '+ user.displayName);
                    })
                         .catch((error) => {
                 // The write failed...
@@ -219,7 +216,7 @@
                 .then(() => {
                    // Data saved successfully!
                         
-                  alert(user.displayName);
+                  alert('Thank you '+ user.displayName);
                    })
                         .catch((error) => {
                 // The write failed...
@@ -240,7 +237,6 @@
         });
         })
 
-
         sub_github.addEventListener('click', (e) => {
         signInWithPopup(auth, githubProvider)
         .then((result) => {
@@ -258,7 +254,7 @@
                 .then(() => {
                    // Data saved successfully!
                         
-                  alert(user.displayName);
+                  alert('Thank you '+ user.displayName);
                    })
                         .catch((error) => {
                 // The write failed...
